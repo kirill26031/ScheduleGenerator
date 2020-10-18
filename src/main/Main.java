@@ -5,12 +5,17 @@ import java.io.FileWriter;
 
 public class Main {
 		public static void main(String[] args) {
-			ScheduleData data = new ScheduleData();
+			ScheduleRequirements data = new ScheduleRequirements();
+			GeneticAlgorithm ga = new GeneticAlgorithm(data);
+
+		}
+
+		void writeJSON(String filename, Object o){
 			GsonBuilder builder = new GsonBuilder();
 			Gson gson = builder.setPrettyPrinting().create();
 			try{
-				FileWriter fw = new FileWriter("./schedule_requirements.json");
-				fw.write(gson.toJson(data));
+				FileWriter fw = new FileWriter(filename);
+				fw.write(gson.toJson(o));
 				fw.close();
 			}
 			catch(Exception e){e.printStackTrace();}
