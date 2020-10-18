@@ -1,3 +1,8 @@
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+
 public class GeneticAlgorithm {
 	ScheduleRequirements requirements;
 	int generationCount=0;
@@ -6,15 +11,13 @@ public class GeneticAlgorithm {
 	
 	public GeneticAlgorithm(ScheduleRequirements requirements) {
 		this.requirements = requirements;
-		population = randomPopulation(requirements);
+		population = Population.randomPopulation(requirements, populationSize);
 		System.out.println("Hi");
 	}
 
-	private Population randomPopulation(ScheduleRequirements requirements) {
-		Schedule[] chromosomes = new Schedule[populationSize];
-		for(int i=0; i<chromosomes.length; ++i){
-			chromosomes[i] = Schedule.getRandomSchedule(requirements);
-		}
-		return new Population(chromosomes);
+	boolean makeStep(){
+		if(population.selectByFitness(1)) return true;
+		population.doCrossover(0.8);
+		return false;
 	}
 }

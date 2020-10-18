@@ -43,7 +43,7 @@ public class ScheduleRequirements {
 						new Integer[]{2,3},
 						40, 20)
 		};
-		days = new ScheduleDay[5];
+		days = new ScheduleDay[6];
 		int[] classes_spots = new int[1];
 		for(int j=0; j<classes_spots.length; ++j){
 			classes_spots[j]=j;

@@ -1,7 +1,8 @@
 import java.util.ArrayList;
 
-public class Schedule {
+public class Schedule implements Cloneable{
 	ArrayList<Lesson> lessons;
+	int fitness = 1;
 
 	public Schedule(ArrayList<Lesson> lessons) {
 		this.lessons = lessons;
@@ -59,9 +60,32 @@ public class Schedule {
 		return freeSpots.get((int)(Math.random()*freeSpots.size()));
 	}
 
+	public int fitnessCalculate() {
+		int teacher_errors = 0;
+		int spot_errors = 0;
+		int room_errors = 0;
+		for(Lesson l : lessons){
+			if(l.teacherId==-1) ++teacher_errors;
+			if(l.classSpotId==-1) ++spot_errors;
+			if(l.classRoomId==-1) ++room_errors;
+		}
+		fitness = -1*(teacher_errors+spot_errors+room_errors);
+		return fitness;
+	}
+
+	int getFitness(){return fitness;}
+
+	@Override
+	protected Schedule clone(){
+		ArrayList<Lesson> clonned_lessons = new ArrayList<Lesson>(lessons.size());
+		for(Lesson l : lessons){
+			clonned_lessons.add(l.clone());
+		}
+		return new Schedule(clonned_lessons);
+	}
 }
 
-class Lesson {
+class Lesson implements Cloneable{
 	int classSpotId;
 	int classRoomId;
 	int teacherId;
@@ -80,5 +104,10 @@ class Lesson {
 		this.teacherId = teacherId;
 		this.subjectId = subjectId;
 		this.isLecture = isLecture;
+	}
+
+	@Override
+	protected Lesson clone(){
+		return new Lesson(classSpotId, classRoomId, teacherId, subjectId, isLecture);
 	}
 }

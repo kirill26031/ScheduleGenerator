@@ -7,7 +7,9 @@ public class Main {
 		public static void main(String[] args) {
 			ScheduleRequirements data = new ScheduleRequirements();
 			GeneticAlgorithm ga = new GeneticAlgorithm(data);
-
+			boolean finished=false;
+			while(!finished) finished=ga.makeStep();
+			System.out.println("here");
 		}
 
 		void writeJSON(String filename, Object o){
