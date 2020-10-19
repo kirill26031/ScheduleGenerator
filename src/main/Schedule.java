@@ -1,3 +1,4 @@
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class Schedule implements Cloneable{
@@ -37,7 +38,7 @@ public class Schedule implements Cloneable{
 		for(Lesson l : lessons){
 			if(l.classSpotId==classSpotId && freeTeachers.contains(l.teacherId)) freeTeachers.remove((Integer)l.teacherId);
 		}
-		if(freeTeachers.isEmpty()) return -1;
+		if(freeTeachers.isEmpty()) return possible_teachers[(int)(Math.random()*possible_teachers.length)];
 		return freeTeachers.get((int)(Math.random()*freeTeachers.size()));
 	}
 
@@ -47,7 +48,9 @@ public class Schedule implements Cloneable{
 		for(Lesson l : lessons){
 			if(l.classSpotId==classSpotId) freeRooms.remove((Integer)l.classRoomId);
 		}
-		if(freeRooms.isEmpty()) return -1;
+		if(freeRooms.isEmpty()) return requirements.getRooms(amount_of_students).get(
+				(int)(Math.random()*requirements.getRooms(amount_of_students).size())
+		);
 		return freeRooms.get((int)(Math.random()*freeRooms.size()));
 	}
 
@@ -56,7 +59,9 @@ public class Schedule implements Cloneable{
 		for(Lesson l : lessons){
 			if(l.subjectId==subject_id && l.isLecture==isLecture) freeSpots.remove((Integer)l.classSpotId);
 		}
-		if(freeSpots.isEmpty()) return -1;
+		if(freeSpots.isEmpty()) return requirements.getSpots().get(
+				(int)(Math.random()*requirements.getSpots().size())
+		);
 		return freeSpots.get((int)(Math.random()*freeSpots.size()));
 	}
 
@@ -65,9 +70,7 @@ public class Schedule implements Cloneable{
 		int spot_errors = 0;
 		int room_errors = 0;
 		for(Lesson l : lessons){
-			if(l.teacherId==-1) ++teacher_errors;
-			if(l.classSpotId==-1) ++spot_errors;
-			if(l.classRoomId==-1) ++room_errors;
+			// calculate amount of repeats for each error type
 		}
 		fitness = -1*(teacher_errors+spot_errors+room_errors);
 		return fitness;
@@ -82,6 +85,39 @@ public class Schedule implements Cloneable{
 			clonned_lessons.add(l.clone());
 		}
 		return new Schedule(clonned_lessons);
+	}
+
+	public void crossoverBySpots(Schedule second) {
+		int crossover_point = (int)(Math.random()*(second.lessons.size()-1));
+		int[] firstSpotGenes = new int[lessons.size()];
+		int[] secondSpotGenes = new int[second.lessons.size()];
+		for(int i=0; i<lessons.size(); ++i) firstSpotGenes[i] = lessons.get(i).classSpotId;
+		for(int i=0; i<second.lessons.size(); ++i) secondSpotGenes[i] = second.lessons.get(i).classSpotId;
+		int[] crossoveredSpotGenes = crossoverOrder(firstSpotGenes, secondSpotGenes, crossover_point);
+		for(int i=0; i<lessons.size(); ++i) lessons.get(i).classSpotId = crossoveredSpotGenes[i];
+	}
+
+	private int[] crossoverOrder(int[] firstSpotGenes, int[] secondSpotGenes, int crossover_point) {
+		int[] crossovered = new int[firstSpotGenes.length];
+		for(int j=0; j<=crossover_point; ++j) crossovered[j]=firstSpotGenes[j];
+		int i=crossover_point+1;
+		int index;
+		for(int spot_second : secondSpotGenes){
+			index = indexOf(crossovered, spot_second);
+			if(index==-1) crossovered[i++]=spot_second;
+		}
+		return crossovered;
+	}
+
+	private int indexOf(int[] crossovered, int spot_second) {
+		for(int i=0; i<crossovered.length; ++i) if(crossovered[i]==spot_second) return i;
+		return -1;
+	}
+
+	public void crossoverByRooms(Schedule second) {
+	}
+
+	public void crossoverByTeachers(Schedule second) {
 	}
 }
 

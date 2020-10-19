@@ -14,6 +14,7 @@ public class Population {
 				return o2.fitnessCalculate() - o1.fitnessCalculate();
 			}
 		});
+		System.out.println(chromosomes[0].fitness);
 		if(isFinished(chromosomes)) return true;
 		Schedule[] new_schedules = new Schedule[chromosomes.length];
 		for(int i=0; i<elitism_offset && i<new_schedules.length; ++i){
@@ -54,7 +55,40 @@ public class Population {
 		return new Population(chromosomes);
 	}
 
-	public void doCrossover(double crossover_propability) {
+	public void doCrossover(int elitism_offset, double crossover_propability) {
+//		Schedule[] offsprings = new Schedule[chromosomes.length];
+//		for(int i=0; i<elitism_offset && i<chromosomes.length; ++i) offsprings[i] = chromosomes[i];
+		for(int i=elitism_offset; i<chromosomes.length; ++i){
+			Schedule first = chromosomes[(int)(Math.random()*chromosomes.length)];
+			if(Math.random()<=crossover_propability){
+				Schedule second = chromosomes[(int)(Math.random()*chromosomes.length)];
+				while(first.equals(second)) second = chromosomes[(int)(Math.random()*chromosomes.length)];
+				chromosomes[i] = crossover(first, second);
+			}
+			else{
+				chromosomes[i] = first;
+			}
+		}
+//		chromosomes=offsprings;
+	}
 
+	private Schedule crossover(Schedule first, Schedule second) {
+		Schedule crossovered = first.clone();
+		int crossover_types = 1;
+//				1+(int)(Math.random()*7);
+		if(crossover_types%2==1) crossovered.crossoverBySpots(second);
+//		if((crossover_types>>1)%2==1) crossovered.crossoverByRooms(second);
+//		if((crossover_types>>2)%2==1) crossovered.crossoverByTeachers(second);
+		return crossovered;
+	}
+
+	public void doMutation(int elitism_offset, double mutation_propability) {
+		for(int i=elitism_offset; i<chromosomes.length; ++i){
+			if(Math.random()<=mutation_propability) chromosomes[i]=mutation(chromosomes[i]);
+		}
+	}
+
+	private Schedule mutation(Schedule chromosome) {
+		return chromosome;
 	}
 }
