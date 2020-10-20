@@ -61,11 +61,11 @@ public class ScheduleRequirements {
 		for(ScheduleDay d : days){
 			for(ScheduleDay.ClassSpot spot : d.spots) res.add(spot.id);
 		}
-		return (ArrayList<Integer>) res.clone();
+		return res;
 	}
 
 	public ArrayList<Integer> getSpots() {
-		return spots;
+		return (ArrayList<Integer>) spots.clone();
 	}
 
 	public ArrayList<Integer> getRooms(int min_size) {
