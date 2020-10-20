@@ -24,11 +24,6 @@
   <component name="ChangeListManager">
     <list default="true" id="feff2a9a-7755-4ee1-9658-29afed0710f2" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/GeneticAlgorithm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GeneticAlgorithm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/Population.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Population.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/Schedule.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Schedule.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/ScheduleRequirements.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ScheduleRequirements.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -173,7 +168,7 @@
       <workItem from="1602975510417" duration="5072000" />
       <workItem from="1603010114064" duration="16603000" />
       <workItem from="1603099595776" duration="6928000" />
-      <workItem from="1603214171861" duration="2245000" />
+      <workItem from="1603214171861" duration="2660000" />
     </task>
     <servers />
   </component>
@@ -200,10 +195,10 @@
     </option>
   </component>
   <component name="WindowStateProjectService">
-    <state x="461" y="165" key="SettingsEditor" timestamp="1603214738890">
+    <state x="450" y="129" key="SettingsEditor" timestamp="1603216833319">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="461" y="165" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1603214738890" />
+    <state x="450" y="129" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1603216833319" />
     <state x="623" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1603214858886">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
