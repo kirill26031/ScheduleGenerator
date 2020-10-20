@@ -3,6 +3,8 @@ package main;
 import java.util.Arrays;
 import java.util.Comparator;
 
+import static main.SchedulePrinter.scheduleToString;
+
 public class Population {
 	Schedule[] chromosomes;
 
@@ -11,6 +13,7 @@ public class Population {
 	}
 
 	public boolean selectByFitness(int elitism_offset){
+		System.out.println(scheduleToString(chromosomes[0]));
 		Arrays.sort(chromosomes, new Comparator<Schedule>() {
 			public int compare(Schedule o1, Schedule o2) {
 				return o2.fitnessCalculate() - o1.fitnessCalculate();
