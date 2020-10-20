@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class ScheduleRequirements {
 	Teacher[] teachers;
-	public Subject[] subjects;
+	public Speciality[] specialities;
 	ClassRoom[] classes;
 	ScheduleDay[] days;
 	ArrayList<Integer> spots;
@@ -18,7 +18,9 @@ public class ScheduleRequirements {
 				new Teacher("Michael Arson"),
 				new Teacher("Volodymyr Petrenko"),
 				new Teacher("Orest Ivanenko"),
-				new Teacher("Kozerenko")
+				new Teacher("Kozerenko"),
+				new Teacher("Voznyuk Yaroslav Ivanovych"),
+				new Teacher("Veretelnyk Roman")
 		};
 		classes = new ClassRoom[]{
 				new ClassRoom("1-100", 17),
@@ -28,22 +30,58 @@ public class ScheduleRequirements {
 				new ClassRoom("1-225", 40),
 				new ClassRoom("1-223", 60)
 		};
-		subjects = new Subject[]{
-				new Subject(
-						"Algorithms", 1, 4,
-						new Integer[]{0},
-						new Integer[]{0, 2},
-						40, 12),
-				new Subject(
-						"English", 0, 2,
-						new Integer[]{1},
-						new Integer[]{1},
-						0, 12),
-				new Subject(
-						"Linear Algebra", 1, 2,
-						new Integer[]{1},
-						new Integer[]{2,3},
-						40, 20)
+		specialities = new Speciality[]{
+				new Speciality("Computer Science 1", new Subject[]{
+						new Subject(
+								"Algorithms", 1, 4,
+								new Integer[]{0},
+								new Integer[]{0, 2},
+								40, 12),
+						new Subject(
+								"English", 0, 2,
+								new Integer[]{1},
+								new Integer[]{1},
+								0, 12),
+						new Subject(
+								"Linear Algebra", 1, 2,
+								new Integer[]{1},
+								new Integer[]{2,3},
+								40, 20)
+				}),
+				new Speciality("Software Engineering 1", new Subject[]{
+						new Subject(
+								"Computer Networks", 1, 2,
+								new Integer[]{3},
+								new Integer[]{3,4},
+								40, 12),
+						new Subject(
+								"English", 0, 2,
+								new Integer[]{1},
+								new Integer[]{1},
+								0, 12),
+						new Subject(
+								"Linear Algebra", 1, 2,
+								new Integer[]{1},
+								new Integer[]{2,3},
+								40, 20)
+				}),
+				new Speciality("Applied mathematics 1", new Subject[]{
+						new Subject(
+								"Computer Networks", 1, 2,
+								new Integer[]{3},
+								new Integer[]{2, 3},
+								40, 12),
+						new Subject(
+								"English", 0, 2,
+								new Integer[]{1},
+								new Integer[]{1},
+								0, 12),
+						new Subject(
+								"Ukrainian literature", 1, 3,
+								new Integer[]{4},
+								new Integer[]{4,5},
+								40, 20)
+				}),
 		};
 		days = new ScheduleDay[6];
 		int[] classes_spots = new int[1];
@@ -72,6 +110,16 @@ public class ScheduleRequirements {
 		ArrayList<Integer> rooms = new ArrayList<Integer>();
 		for(int i=0; i<classes.length; ++i) if(classes[i].size>=min_size) rooms.add(i);
 		return rooms;
+	}
+}
+
+class Speciality {
+	String name;
+	Subject[] subjects;
+
+	public Speciality(String name, Subject[] subjects){
+		this.name = name;
+		this.subjects = subjects;
 	}
 }
 

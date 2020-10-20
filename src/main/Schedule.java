@@ -4,39 +4,43 @@ import java.util.ArrayList;
 
 
 public class Schedule implements Cloneable{
-	ArrayList<Lesson> lessons;
+	ArrayList<Lesson>[] lessons;
 	int fitness = 1;
 
-	public Schedule(ArrayList<Lesson> lessons) {
+	public Schedule(ArrayList<Lesson>[] lessons) {
 		this.lessons = lessons;
 	}
 
 	public static Schedule getRandomSchedule(ScheduleRequirements requirements) {
-		ArrayList<Lesson> lessons = new ArrayList<Lesson>();
-		for(int i=0; i<requirements.subjects.length; ++i){
-			Subject s = requirements.subjects[i];
-			int classSpotId;
-			int roomSpotId;
-			int teacherId;
-			for(int j=0; j<s.lectures_amount; ++j){
-				classSpotId = getRandomFreeSpot(requirements, lessons, s.id, true);
-				roomSpotId = getRandomFreeRoom(requirements, lessons, s.amount_of_students_on_lectures, classSpotId);
-				teacherId = getRandomFreeTeacher(lessons, s.possible_teachers_for_lectures, classSpotId);
-				lessons.add(new Lesson(classSpotId, roomSpotId, teacherId, s.id, true));
-			}
-			for(int j=0; j<s.seminars_amount; ++j){
-				classSpotId = getRandomFreeSpot(requirements, lessons, s.id, false);
-				roomSpotId = getRandomFreeRoom(requirements, lessons, s.amount_of_students_on_seminars, classSpotId);
-				teacherId = getRandomFreeTeacher(lessons, s.possible_teachers_for_seminars, classSpotId);
-				lessons.add(new Lesson(classSpotId, roomSpotId, teacherId, s.id, false));
+		ArrayList<Lesson>[] lessons_of_specialities = new ArrayList[requirements.specialities.length];
+		for(int k=0; k<requirements.specialities.length; ++k){
+			for(int i=0; i<requirements.specialities[k].subjects.length; ++i){
+				Subject s = requirements.specialities[k].subjects[i];
+				int classSpotId;
+				int roomSpotId;
+				int teacherId;
+				for(int j=0; j<s.lectures_amount; ++j){
+					classSpotId = getRandomFreeSpot(requirements, lessons_of_specialities, s.id, true);
+					roomSpotId = getRandomFreeRoom(requirements, lessons_of_specialities, s.amount_of_students_on_lectures, classSpotId);
+					teacherId = getRandomFreeTeacher(lessons_of_specialities[k], s.possible_teachers_for_lectures, classSpotId);
+					lessons_of_specialities[k].add(new Lesson(classSpotId, roomSpotId, teacherId, s.id, true));
+				}
+				for(int j=0; j<s.seminars_amount; ++j){
+					classSpotId = getRandomFreeSpot(requirements, lessons_of_specialities, s.id, false);
+					roomSpotId = getRandomFreeRoom(requirements, lessons_of_specialities, s.amount_of_students_on_seminars, classSpotId);
+					teacherId = getRandomFreeTeacher(lessons_of_specialities[k], s.possible_teachers_for_seminars, classSpotId);
+					lessons_of_specialities[k].add(new Lesson(classSpotId, roomSpotId, teacherId, s.id, false));
+				}
 			}
 		}
-		return new Schedule(lessons);
+
+		return new Schedule(lessons_of_specialities);
 	}
 
 	private static int getRandomFreeTeacher(ArrayList<Lesson> lessons, Integer[] possible_teachers, int classSpotId) {
 		ArrayList<Integer> freeTeachers = new ArrayList<Integer>(possible_teachers.length);
 		for(int i=0; i<possible_teachers.length; ++i) freeTeachers.add(possible_teachers[i]);
+		// now we care only about errors inside speciality
 		for(Lesson l : lessons){
 			if(l.classSpotId==classSpotId && freeTeachers.contains(l.teacherId)) freeTeachers.remove((Integer)l.teacherId);
 		}
@@ -44,22 +48,27 @@ public class Schedule implements Cloneable{
 		return freeTeachers.get((int)(Math.random()*freeTeachers.size()));
 	}
 
-	private static int getRandomFreeRoom(ScheduleRequirements requirements, ArrayList<Lesson> lessons,
+	private static int getRandomFreeRoom(ScheduleRequirements requirements, ArrayList<Lesson>[] lessons_of_specialities,
 										 int amount_of_students, int classSpotId) {
 		ArrayList<Integer> freeRooms = requirements.getRooms(amount_of_students);
-		for(Lesson l : lessons){
-			if(l.classSpotId==classSpotId) freeRooms.remove((Integer)l.classRoomId);
+		for(ArrayList<Lesson> lessons : lessons_of_specialities){
+			for(Lesson l : lessons){
+				if(l.classSpotId==classSpotId) freeRooms.remove((Integer)l.classRoomId);
+			}
 		}
+
 		if(freeRooms.isEmpty()) return requirements.getRooms(amount_of_students).get(
 				(int)(Math.random()*requirements.getRooms(amount_of_students).size())
 		);
 		return freeRooms.get((int)(Math.random()*freeRooms.size()));
 	}
 
-	private static int getRandomFreeSpot(ScheduleRequirements requirements, ArrayList<Lesson> lessons, int subject_id, boolean isLecture) {
-		ArrayList<Integer> freeSpots = (ArrayList<Integer>) requirements.getSpots().clone();
-		for(Lesson l : lessons){
-			if(l.subjectId==subject_id && l.isLecture==isLecture) freeSpots.remove((Integer)l.classSpotId);
+	private static int getRandomFreeSpot(ScheduleRequirements requirements, ArrayList<Lesson>[] lessons_of_specialities, int subject_id, boolean isLecture) {
+		ArrayList<Integer> freeSpots = requirements.getSpots();
+		for(ArrayList<Lesson> lessons : lessons_of_specialities){
+			for(Lesson l : lessons) {
+				if (l.subjectId == subject_id && l.isLecture == isLecture) freeSpots.remove((Integer) l.classSpotId);
+			}
 		}
 		if(freeSpots.isEmpty()) return requirements.getSpots().get(
 				(int)(Math.random()*requirements.getSpots().size())
@@ -71,9 +80,9 @@ public class Schedule implements Cloneable{
 		int teacher_errors = 0;
 		int spot_errors = 0;
 		int room_errors = 0;
-		for(Lesson l : lessons){
-			// calculate amount of repeats for each error type
-		}
+//		for(Lesson l : lessons){
+//			// calculate amount of repeats for each error type
+//		}
 		fitness = -1*(teacher_errors+spot_errors+room_errors);
 		return fitness;
 	}
@@ -83,9 +92,9 @@ public class Schedule implements Cloneable{
 	@Override
 	protected Schedule clone(){
 		ArrayList<Lesson> clonned_lessons = new ArrayList<Lesson>(lessons.size());
-		for(Lesson l : lessons){
-			clonned_lessons.add(l.clone());
-		}
+//		for(Lesson l : lessons){
+//			clonned_lessons.add(l.clone());
+//		}
 		return new Schedule(clonned_lessons);
 	}
 
