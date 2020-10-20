@@ -61,7 +61,7 @@ public class ScheduleRequirements {
 		for(ScheduleDay d : days){
 			for(ScheduleDay.ClassSpot spot : d.spots) res.add(spot.id);
 		}
-		return res;
+		return (ArrayList<Integer>) res.clone();
 	}
 
 	public ArrayList<Integer> getSpots() {

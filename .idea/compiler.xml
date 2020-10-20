@@ -6,8 +6,9 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="ScheduleGenerator" />
         <module name="schedule" />
+        <module name="ScheduleGenerator" />
+        <module name="ScheduleGenerator2" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="15" />

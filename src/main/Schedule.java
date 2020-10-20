@@ -57,7 +57,7 @@ public class Schedule implements Cloneable{
 	}
 
 	private static int getRandomFreeSpot(ScheduleRequirements requirements, ArrayList<Lesson> lessons, int subject_id, boolean isLecture) {
-		ArrayList<Integer> freeSpots = requirements.getSpots();
+		ArrayList<Integer> freeSpots = (ArrayList<Integer>) requirements.getSpots().clone();
 		for(Lesson l : lessons){
 			if(l.subjectId==subject_id && l.isLecture==isLecture) freeSpots.remove((Integer)l.classSpotId);
 		}
