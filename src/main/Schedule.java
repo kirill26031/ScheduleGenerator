@@ -87,11 +87,13 @@ public class Schedule implements Cloneable, Comparable<Schedule>{
 				}
 			}
 
-			//посчитать вмещаются ли студенты
+			int required_size = (lessons.get(i).isLecture) ?
+					Population.static_requirements.subjects[lessons.get(i).subjectId].amount_of_students_on_lectures :
+					Population.static_requirements.subjects[lessons.get(i).subjectId].amount_of_students_on_seminars;
+			if(Population.static_requirements.classes[lessons.get(i).classRoomId].size<required_size){
+				room_size_errors++;
+			}//посчитать вмещаются ли студенты
 		}
-
-
-
 		fitness = -1*(teacher_errors+room_spot_errors);
 		return fitness;
 	}
