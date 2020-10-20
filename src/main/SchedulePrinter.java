@@ -33,6 +33,33 @@ public class SchedulePrinter {
     }
 
     public static String lessonToString(Lesson les){
-        return gson.toJson(les);
+        BtLesson beautifiedLesson = new BtLesson(les.classSpotId,
+                les.classRoomId,
+                Population.static_requirements.teachers[les.teacherId].fullname,
+                Population.static_requirements.subjects[les.subjectId].name,
+                (les.isLecture? "Lecture": "Practice"),
+                Population.static_requirements.classes[les.classRoomId].size);
+
+        return gson.toJson(beautifiedLesson);
+    }
+
+}
+
+class BtLesson {
+    private int time = 0;
+    private int classroom = 0;
+    private String teacherName = "";
+    private String subjectName = "";
+    private String type = "";
+    private int classroomSize = 0;
+
+    public BtLesson(int time, int classroom, String teacherName, String subjectName, String type, int classroomSize) {
+        this.time = time;
+        this.classroom = classroom;
+        this.teacherName = teacherName;
+        this.subjectName = subjectName;
+        this.type = type;
+        this.classroomSize = classroomSize;
     }
 }
+

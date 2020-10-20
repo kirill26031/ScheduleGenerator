@@ -9,8 +9,6 @@ import static main.SchedulePrinter.lessonToString;
 
 public class Main {
 		public static void main(String[] args) {
-			Lesson test = new Lesson(10,2,1,24,true);
-			System.out.println(lessonToString(test));
 			ScheduleRequirements data = new ScheduleRequirements();
 			GeneticAlgorithm ga = new GeneticAlgorithm(data);
 			boolean finished=false;
