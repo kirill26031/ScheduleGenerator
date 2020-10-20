@@ -3,11 +3,11 @@ package main;
 import java.util.ArrayList;
 
 public class ScheduleRequirements {
-	Teacher[] teachers;
+	public Teacher[] teachers;
 	public Subject[] subjects;
-	ClassRoom[] classes;
-	ScheduleDay[] days;
-	ArrayList<Integer> spots;
+	public ClassRoom[] classes;
+	public ScheduleDay[] days;
+	public ArrayList<Integer> spots;
 	static int next_teacher_id=0;
 	static int next_class_room_id=0;
 	static int next_subject_id=0;
