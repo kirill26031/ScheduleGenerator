@@ -1,5 +1,5 @@
 
-package src.main;
+package src;
 import java.util.Arrays;
 import java.util.Comparator;
 

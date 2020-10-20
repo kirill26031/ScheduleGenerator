@@ -23,28 +23,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="feff2a9a-7755-4ee1-9658-29afed0710f2" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/schedule.iml" beforeDir="false" afterPath="$PROJECT_DIR$/schedule.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/GeneticAlgorithm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/GeneticAlgorithm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/Population.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Population.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/Schedule.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Schedule.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/ScheduleRequirements.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/ScheduleRequirements.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ClassRoom.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/GeneticAlgorithm.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Lesson.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Main.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Population$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Population.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Schedule.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ScheduleDay$ClassSpot.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ScheduleDay.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ScheduleRequirements.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Subject.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Teacher.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/GeneticAlgorithm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GeneticAlgorithm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/Population.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Population.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/Schedule.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Schedule.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/ScheduleRequirements.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ScheduleRequirements.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -189,7 +173,7 @@
       <workItem from="1602975510417" duration="5072000" />
       <workItem from="1603010114064" duration="16603000" />
       <workItem from="1603099595776" duration="6928000" />
-      <workItem from="1603214171861" duration="854000" />
+      <workItem from="1603214171861" duration="2245000" />
     </task>
     <servers />
   </component>
@@ -229,17 +213,17 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/Schedule.java</url>
+          <url>file://$PROJECT_DIR$/src/Schedule.java</url>
           <line>103</line>
           <option name="timeStamp" value="6" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/Schedule.java</url>
+          <url>file://$PROJECT_DIR$/src/Schedule.java</url>
           <line>93</line>
           <option name="timeStamp" value="7" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/Population.java</url>
+          <url>file://$PROJECT_DIR$/src/Population.java</url>
           <line>18</line>
           <option name="timeStamp" value="10" />
         </line-breakpoint>
