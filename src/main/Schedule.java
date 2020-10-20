@@ -1,5 +1,8 @@
+package src.main;
+
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+
 
 public class Schedule implements Cloneable{
 	ArrayList<Lesson> lessons;
