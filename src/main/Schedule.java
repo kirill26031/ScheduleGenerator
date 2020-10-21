@@ -3,16 +3,16 @@ package main;
 import java.util.ArrayList;
 
 
-public class Schedule implements Cloneable{
-	ArrayList<Lesson>[] lessons;
-	int fitness = 1;
+public class Schedule implements Cloneable, Comparable{
+	ArrayList<Lesson>[] lessons_of_specialities;
 
 	public Schedule(ArrayList<Lesson>[] lessons) {
-		this.lessons = lessons;
+		this.lessons_of_specialities = lessons;
 	}
 
 	public static Schedule getRandomSchedule(ScheduleRequirements requirements) {
 		ArrayList<Lesson>[] lessons_of_specialities = new ArrayList[requirements.specialities.length];
+		for(int i=0; i<lessons_of_specialities.length; ++i) lessons_of_specialities[i] = new ArrayList<>();
 		for(int k=0; k<requirements.specialities.length; ++k){
 			for(int i=0; i<requirements.specialities[k].subjects.length; ++i){
 				Subject s = requirements.specialities[k].subjects[i];
@@ -23,13 +23,13 @@ public class Schedule implements Cloneable{
 					classSpotId = getRandomFreeSpot(requirements, lessons_of_specialities, s.id, true);
 					roomSpotId = getRandomFreeRoom(requirements, lessons_of_specialities, s.amount_of_students_on_lectures, classSpotId);
 					teacherId = getRandomFreeTeacher(lessons_of_specialities[k], s.possible_teachers_for_lectures, classSpotId);
-					lessons_of_specialities[k].add(new Lesson(classSpotId, roomSpotId, teacherId, s.id, true));
+					lessons_of_specialities[k].add(new Lesson(classSpotId, roomSpotId, teacherId, s.id, k, true));
 				}
 				for(int j=0; j<s.seminars_amount; ++j){
 					classSpotId = getRandomFreeSpot(requirements, lessons_of_specialities, s.id, false);
 					roomSpotId = getRandomFreeRoom(requirements, lessons_of_specialities, s.amount_of_students_on_seminars, classSpotId);
 					teacherId = getRandomFreeTeacher(lessons_of_specialities[k], s.possible_teachers_for_seminars, classSpotId);
-					lessons_of_specialities[k].add(new Lesson(classSpotId, roomSpotId, teacherId, s.id, false));
+					lessons_of_specialities[k].add(new Lesson(classSpotId, roomSpotId, teacherId, s.id, k,false));
 				}
 			}
 		}
@@ -79,54 +79,67 @@ public class Schedule implements Cloneable{
 	private int fitnessCalculate() {
 		int teacher_errors = 0;
 		int room_spot_errors = 0;
+		int spot_errors = 0;
 		int room_size_errors = 0;
-		int students_errors = 0; //students spots errors
-//		for(Lesson l : lessons){
-//			// calculate amount of repeats for each error type
-//		}
-
-
-		for(int i = 0; i < lessons.size() - 1; i++)
+//		int students_errors = 0; //students spots errors
+		ArrayList<Lesson> all_lessons = new ArrayList<>(lessons_of_specialities.length*lessons_of_specialities[0].size());
+		for(ArrayList<Lesson> lessons : lessons_of_specialities){
+			all_lessons.addAll(lessons);
+		}
+		for(int i = 0; i < all_lessons.size() - 1; i++)
 		{
-			for(int j = i+1; j < lessons.size(); j++)
+			for(int j = i+1; j < all_lessons.size(); j++)
 			{
-				if(lessons.get(i).classSpotId == lessons.get(j).classSpotId ){
-					if(lessons.get(i).teacherId == lessons.get(j).teacherId) teacher_errors++;
-					if(lessons.get(i).classRoomId == lessons.get(j).classRoomId) room_spot_errors++;
+				if(all_lessons.get(i).classSpotId == all_lessons.get(j).classSpotId ){
+					if(all_lessons.get(i).specialityID == all_lessons.get(j).specialityID ){
+						spot_errors++;
+					}
+					if(all_lessons.get(i).teacherId == all_lessons.get(j).teacherId) teacher_errors++;
+					if(all_lessons.get(i).classRoomId == all_lessons.get(j).classRoomId) room_spot_errors++;
 				}
 			}
-
-			int required_size = (lessons.get(i).isLecture) ?
-					Population.static_requirements.subjects[lessons.get(i).subjectId].amount_of_students_on_lectures :
-					Population.static_requirements.subjects[lessons.get(i).subjectId].amount_of_students_on_seminars;
-			if(Population.static_requirements.classes[lessons.get(i).classRoomId].size<required_size){
-				room_size_errors++;
-			}//посчитать вмещаются ли студенты
 		}
-		fitness = -1*(teacher_errors+room_spot_errors);
-		return fitness;
+		for(int i=0; i<all_lessons.size(); ++i){
+			Subject subject = Population.static_requirements.specialities[
+					all_lessons.get(i).specialityID
+					].subjects[
+							all_lessons.get(i).subjectId
+					];
+			int required_size = (all_lessons.get(i).isLecture) ?
+					subject.amount_of_students_on_lectures :
+					subject.amount_of_students_on_seminars;
+			if(Population.static_requirements.classes[all_lessons.get(i).classRoomId].size<required_size){
+				room_size_errors++;
+			}
+		}
+		return -1*(teacher_errors+room_spot_errors+room_size_errors+spot_errors);
 	}
 
 	int getFitness(){return fitnessCalculate();}
 
 	@Override
 	protected Schedule clone(){
-		ArrayList<Lesson> clonned_lessons = new ArrayList<Lesson>(lessons.size());
-		for(Lesson l : lessons){
-			clonned_lessons.add(l.clone());
+		ArrayList<Lesson>[] clonned_specialities = new ArrayList[lessons_of_specialities.length];
+		for(int i=0; i<lessons_of_specialities.length; ++i) {
+			ArrayList<Lesson> lessons = lessons_of_specialities[i];
+			ArrayList<Lesson> new_lessons = new ArrayList<>(lessons.size());
+			for (Lesson l : lessons) {
+				new_lessons.add(l.clone());
+			}
+			clonned_specialities[i] = new_lessons;
 		}
 
-		return new Schedule(clonned_lessons);
+		return new Schedule(clonned_specialities);
 	}
 
 	public void crossoverBySpots(Schedule second) {
-		int crossover_point = (int)(Math.random()*(second.lessons.size()-1));
-		int[] firstSpotGenes = new int[lessons.size()];
-		int[] secondSpotGenes = new int[second.lessons.size()];
-		for(int i=0; i<lessons.size(); ++i) firstSpotGenes[i] = lessons.get(i).classSpotId;
-		for(int i=0; i<second.lessons.size(); ++i) secondSpotGenes[i] = second.lessons.get(i).classSpotId;
-		int[] crossoveredSpotGenes = crossoverOrder(firstSpotGenes, secondSpotGenes, crossover_point);
-		for(int i=0; i<lessons.size(); ++i) lessons.get(i).classSpotId = crossoveredSpotGenes[i];
+//		int crossover_point = (int)(Math.random()*(second.lessons_of_specialities.size()-1));
+//		int[] firstSpotGenes = new int[lessons_of_specialities.size()];
+//		int[] secondSpotGenes = new int[second.lessons_of_specialities.size()];
+//		for(int i = 0; i< lessons_of_specialities.size(); ++i) firstSpotGenes[i] = lessons_of_specialities.get(i).classSpotId;
+//		for(int i = 0; i<second.lessons_of_specialities.size(); ++i) secondSpotGenes[i] = second.lessons_of_specialities.get(i).classSpotId;
+//		int[] crossoveredSpotGenes = crossoverOrder(firstSpotGenes, secondSpotGenes, crossover_point);
+//		for(int i = 0; i< lessons_of_specialities.size(); ++i) lessons_of_specialities.get(i).classSpotId = crossoveredSpotGenes[i];
 	}
 
 	private int[] crossoverOrder(int[] firstSpotGenes, int[] secondSpotGenes, int crossover_point) {
@@ -153,8 +166,8 @@ public class Schedule implements Cloneable{
 	}
 
 	@Override
-	public int compareTo(Schedule o) {
-		return Integer.compare(o.getFitness(), getFitness());
+	public int compareTo(Object o) {
+		return ((Schedule)o).getFitness()-getFitness();
 	}
 }
 
@@ -163,6 +176,7 @@ class Lesson implements Cloneable{
 	int classRoomId;
 	int teacherId;
 	int subjectId;
+	int specialityID;
 	boolean isLecture;
 
 	public Lesson(
@@ -170,17 +184,19 @@ class Lesson implements Cloneable{
 			int classRoomId,
 			int teacherId,
 			int subjectId,
+			int specialityID,
 			boolean isLecture
 	){
 		this.classSpotId = classSpotId;
 		this.classRoomId = classRoomId;
 		this.teacherId = teacherId;
 		this.subjectId = subjectId;
+		this.specialityID = specialityID;
 		this.isLecture = isLecture;
 	}
 
 	@Override
 	protected Lesson clone(){
-		return new Lesson(classSpotId, classRoomId, teacherId, subjectId, isLecture);
+		return new Lesson(classSpotId, classRoomId, teacherId, subjectId, specialityID, isLecture);
 	}
 }

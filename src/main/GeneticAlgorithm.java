@@ -16,12 +16,12 @@ public class GeneticAlgorithm {
 
 	boolean makeStep(){
 		generationCount++;
-		if(population.selectByFitness(1)) return true;
-
-		// crossover possibly has bugs
-		offsprings = population.doCrossover(1,0.8);
-		// mutation empty
-		offsprings.doMutation(1, 0.05);
+		if(generationCount>=100 || Population.isFinished(population)) return true;
+		offsprings = population.evolve(1, 0.8, 0.05);
+//		// crossover possibly has bugs
+//		offsprings = population.doCrossover(1,0.8);
+//		// mutation empty
+//		offsprings.doMutation(1, 0.05);
 		population.newGeneration(offsprings);
 		return false;
 	}

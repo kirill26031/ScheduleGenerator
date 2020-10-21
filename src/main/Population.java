@@ -10,34 +10,10 @@ public class Population {
 	Schedule[] chromosomes;
 	static ScheduleRequirements static_requirements;
 	static int static_populationSize;
+	static int tournament_size=5;
 
 	public Population(Schedule[] chromosomes){
 		this.chromosomes = chromosomes;
-	}
-
-	public boolean selectByFitness(int elitism_offset){
-		System.out.println(scheduleToString(chromosomes[0]));
-		Arrays.sort(chromosomes, new Comparator<Schedule>() {
-			public int compare(Schedule o1, Schedule o2) {
-				return o2.getFitness() - o1.getFitness();
-			}
-		});
-		System.out.println(chromosomes[0].getFitness());
-		if(isFinished(chromosomes)) return true;
-		Schedule[] new_schedules = new Schedule[chromosomes.length];
-		for(int i=0; i<elitism_offset && i<new_schedules.length; ++i){
-			new_schedules[i] = chromosomes[i];
-		}
-		int sum_fitness=0;
-		int min_fitness=0;
-		for(Schedule schedule: chromosomes) {
-			sum_fitness+=schedule.getFitness();
-			min_fitness = Math.min(min_fitness, schedule.getFitness());
-		}
-		for(int i=elitism_offset; i<new_schedules.length; ++i){
-			new_schedules[i] = getRandomSchedule(Math.abs(sum_fitness), chromosomes, Math.abs(min_fitness));
-		}
-		return false;
 	}
 
 	private Schedule getRandomSchedule(int sum_fitness, Schedule[] schedules, int min_fitness) {
@@ -51,8 +27,8 @@ public class Population {
 		return schedules[0].clone();
 	}
 
-	public boolean isFinished(Schedule[] chromosomes) {
-		return chromosomes[0].fitness==0;
+	public static boolean isFinished(Population population) {
+		return population.chromosomes[0].getFitness()==0;
 	}
 
 	public static Population randomPopulation(ScheduleRequirements requirements, int populationSize) {
@@ -71,9 +47,9 @@ public class Population {
 		Schedule[] offsprings = new Schedule[chromosomes.length];
 		for(int i=0; i<elitism_offset && i<chromosomes.length; ++i) offsprings[i] = chromosomes[i];
 		for(int i=elitism_offset; i<chromosomes.length; ++i){
-			Schedule first = chromosomes[(int)(Math.random()*chromosomes.length)];
+			Schedule first = chromosomes[(int)(Math.random()*chromosomes.length)].clone();
 			if(Math.random()<=crossover_propability){
-				Schedule second = chromosomes[(int)(Math.random()*chromosomes.length)];
+				Schedule second = chromosomes[(int)(Math.random()*chromosomes.length)].clone();
 				while(first.equals(second)) second = chromosomes[(int)(Math.random()*chromosomes.length)];
 				chromosomes[i] = crossover(first, second);
 			}
@@ -106,12 +82,12 @@ public class Population {
 		if((crossover_types>>1)%2==1) crossovered.crossoverByRooms(second);
 		if((crossover_types>>2)%2==1) crossovered.crossoverByTeachers(second);
 
-//		Schedule crossovered = new Schedule(new ArrayList<Lesson>(first.lessons.size()));
-//		int pivot = (int)(Math.random()*first.lessons.size());
-//		for(int i = 0; i < first.lessons.size(); i++)
+//		Schedule crossovered = new Schedule(new ArrayList<Lesson>(first.lessons_of_specialities.size()));
+//		int pivot = (int)(Math.random()*first.lessons_of_specialities.size());
+//		for(int i = 0; i < first.lessons_of_specialities.size(); i++)
 //		{
-//			if(i < pivot) crossovered.lessons.add(first.lessons.get(i));
-//			else crossovered.lessons.add(second.lessons.get(i));
+//			if(i < pivot) crossovered.lessons_of_specialities.add(first.lessons_of_specialities.get(i));
+//			else crossovered.lessons_of_specialities.add(second.lessons_of_specialities.get(i));
 //		}
 		return crossovered;
 	}
@@ -124,16 +100,16 @@ public class Population {
 
 	private Schedule mutation(Schedule chromosome)
 	{
-		int room = (int)(Math.random()*chromosome.lessons.size());
-		int spot = (int)(Math.random()*chromosome.lessons.size());
-
-		int sbjIdR = chromosome.lessons.get(room).subjectId;
-
-		switch ((int)(Math.random()*2)){
-			case 0: chromosome.lessons.get(room).classRoomId = (int)(Math.random()*(chromosome.lessons.get(room).isLecture ? static_requirements.subjects[chromosome.lessons.get(room).subjectId].amount_of_students_on_lectures : static_requirements.subjects[chromosome.lessons.get(room).subjectId].amount_of_students_on_seminars)); break;
-			case 1: chromosome.lessons.get(spot).classSpotId = (int)(Math.random()*(chromosome.lessons.get(spot).isLecture ? static_requirements.subjects[chromosome.lessons.get(spot).subjectId].amount_of_students_on_lectures : static_requirements.subjects[chromosome.lessons.get(spot).subjectId].amount_of_students_on_seminars)); break;
-			default: break;
-		}
+//		int room = (int)(Math.random()*chromosome.lessons_of_specialities.size());
+//		int spot = (int)(Math.random()*chromosome.lessons_of_specialities.size());
+//
+//		int sbjIdR = chromosome.lessons_of_specialities.get(room).subjectId;
+//
+//		switch ((int)(Math.random()*2)){
+//			case 0: chromosome.lessons_of_specialities.get(room).classRoomId = (int)(Math.random()*(chromosome.lessons_of_specialities.get(room).isLecture ? static_requirements.subjects[chromosome.lessons_of_specialities.get(room).subjectId].amount_of_students_on_lectures : static_requirements.subjects[chromosome.lessons_of_specialities.get(room).subjectId].amount_of_students_on_seminars)); break;
+//			case 1: chromosome.lessons_of_specialities.get(spot).classSpotId = (int)(Math.random()*(chromosome.lessons_of_specialities.get(spot).isLecture ? static_requirements.subjects[chromosome.lessons_of_specialities.get(spot).subjectId].amount_of_students_on_lectures : static_requirements.subjects[chromosome.lessons_of_specialities.get(spot).subjectId].amount_of_students_on_seminars)); break;
+//			default: break;
+//		}
 
 		return  chromosome;
 	}
@@ -160,4 +136,35 @@ public class Population {
 		chromosomes = new_population;
 	}
 
+	public Population evolve(int elitism_offset, double crossover_propability, double mutation_propability) {
+		Arrays.sort(chromosomes);
+		System.out.println(SchedulePrinter.scheduleToString(chromosomes[0]));
+		System.out.println(chromosomes[0].getFitness());
+		Schedule[] new_schedules = new Schedule[chromosomes.length];
+		for(int i=0; i<elitism_offset && i<new_schedules.length; ++i){
+			new_schedules[i] = chromosomes[i].clone();
+		}
+		for(int i=elitism_offset; i<new_schedules.length; ++i){
+			Schedule first = selectScheduleByTournament();
+			if(Math.random()<crossover_propability){
+				Schedule second = selectScheduleByTournament();
+				new_schedules[i] = crossover(first, second);
+			}
+			else{
+				new_schedules[i]=first.clone();
+			}
+		}
+		return new Population(new_schedules);
+	}
+
+	private Schedule selectScheduleByTournament() {
+		Schedule best = chromosomes[(int)(Math.random()*chromosomes.length)];
+		for(int i=0; i<tournament_size-1; ++i){
+			Schedule s = chromosomes[(int)(Math.random()*chromosomes.length)];
+			if(best.getFitness()<s.getFitness()){
+				best = s;
+			}
+		}
+		return best.clone();
+	}
 }

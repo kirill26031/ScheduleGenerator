@@ -10,7 +10,6 @@ public class ScheduleRequirements {
 	ArrayList<Integer> spots;
 	static int next_teacher_id=0;
 	static int next_class_room_id=0;
-	static int next_subject_id=0;
 	static int next_spot_id=0;
 
 	public ScheduleRequirements(){
@@ -36,55 +35,55 @@ public class ScheduleRequirements {
 								"Algorithms", 1, 4,
 								new Integer[]{0},
 								new Integer[]{0, 2},
-								40, 12),
+								40, 12, 0),
 						new Subject(
 								"English", 0, 2,
 								new Integer[]{1},
 								new Integer[]{1},
-								0, 12),
+								0, 12, 0),
 						new Subject(
 								"Linear Algebra", 1, 2,
 								new Integer[]{1},
 								new Integer[]{2,3},
-								40, 20)
+								40, 20, 0)
 				}),
 				new Speciality("Software Engineering 1", new Subject[]{
 						new Subject(
 								"Computer Networks", 1, 2,
 								new Integer[]{3},
 								new Integer[]{3,4},
-								40, 12),
+								40, 12, 1),
 						new Subject(
 								"English", 0, 2,
 								new Integer[]{1},
 								new Integer[]{1},
-								0, 12),
+								0, 12, 1),
 						new Subject(
 								"Linear Algebra", 1, 2,
 								new Integer[]{1},
 								new Integer[]{2,3},
-								40, 20)
+								40, 20, 1)
 				}),
 				new Speciality("Applied mathematics 1", new Subject[]{
 						new Subject(
 								"Computer Networks", 1, 2,
 								new Integer[]{3},
 								new Integer[]{2, 3},
-								40, 12),
+								40, 12, 2),
 						new Subject(
 								"English", 0, 2,
 								new Integer[]{1},
 								new Integer[]{1},
-								0, 12),
+								0, 12, 2),
 						new Subject(
 								"Ukrainian literature", 1, 3,
 								new Integer[]{4},
 								new Integer[]{4,5},
-								40, 20)
+								40, 20, 2)
 				}),
 		};
 		days = new ScheduleDay[6];
-		int[] classes_spots = new int[1];
+		int[] classes_spots = new int[2];
 		for(int j=0; j<classes_spots.length; ++j){
 			classes_spots[j]=j;
 		}
@@ -154,6 +153,8 @@ class Subject {
 	int amount_of_students_on_lectures;
 	String name;
 	int id;
+	static int last_speciality_id=-1;
+	static int next_subject_id=0;
 
 	public Subject(
 			String name,
@@ -162,7 +163,8 @@ class Subject {
 			Integer[] possible_teachers_for_lectures,
 			Integer[] possible_teachers_for_seminars,
 			int amount_of_students_on_lectures,
-			int amount_of_students_on_seminars
+			int amount_of_students_on_seminars,
+			int speciality_id
 	){
 		this.lectures_amount = lectures_amount;
 		this.seminars_amount = seminars_amount;
@@ -171,7 +173,11 @@ class Subject {
 		this.name = name;
 		this.amount_of_students_on_lectures = amount_of_students_on_lectures;
 		this.amount_of_students_on_seminars = amount_of_students_on_seminars;
-		this.id = ScheduleRequirements.next_subject_id++;
+		if(speciality_id!=last_speciality_id){
+			last_speciality_id=speciality_id;
+			next_subject_id=0;
+		}
+		this.id = next_subject_id++;
 	}
 }
 
