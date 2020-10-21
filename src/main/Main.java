@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.io.FileWriter;
 
+import static main.SchedulePrinter.lessonToString;
+
 
 public class Main {
 		public static void main(String[] args) {
