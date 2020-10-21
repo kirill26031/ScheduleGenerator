@@ -10,6 +10,7 @@ public class Schedule implements Cloneable, Comparable{
 		this.lessons_of_specialities = lessons;
 	}
 
+
 	public static Schedule getRandomSchedule(ScheduleRequirements requirements) {
 		ArrayList<Lesson>[] lessons_of_specialities = new ArrayList[requirements.specialities.length];
 		for(int i=0; i<lessons_of_specialities.length; ++i) lessons_of_specialities[i] = new ArrayList<>();
@@ -128,7 +129,11 @@ public class Schedule implements Cloneable, Comparable{
 			}
 			clonned_specialities[i] = new_lessons;
 		}
-
+		if(lessons_of_specialities[0].size()+lessons_of_specialities[1].size()+lessons_of_specialities[2].size()
+			!= clonned_specialities[0].size()+clonned_specialities[1].size()+clonned_specialities[2].size()
+		){
+			System.out.println("clonning bug");
+		}
 		return new Schedule(clonned_specialities);
 	}
 
@@ -167,7 +172,21 @@ public class Schedule implements Cloneable, Comparable{
 
 	@Override
 	public int compareTo(Object o) {
-		return ((Schedule)o).getFitness()-getFitness();
+		int compared =  ((Schedule)o).getFitness()-getFitness();
+		if(compared==0) {
+			return equals(o) ? 0 : 1;
+		}
+		else return compared;
+	}
+
+	@Override
+	public boolean equals(Object o){
+		for(int i=0; i<lessons_of_specialities.length; ++i){
+			for(int j=0; j<lessons_of_specialities[i].size(); ++j){
+				if(!lessons_of_specialities[i].get(j).equals(((Schedule)o).lessons_of_specialities[i].get(j))) return false;
+			}
+		}
+		return true;
 	}
 }
 
@@ -198,5 +217,16 @@ class Lesson implements Cloneable{
 	@Override
 	protected Lesson clone(){
 		return new Lesson(classSpotId, classRoomId, teacherId, subjectId, specialityID, isLecture);
+	}
+
+	@Override
+	public boolean equals(Object o){
+		Lesson l = (Lesson)o;
+		return classSpotId==l.classSpotId &&
+				classRoomId==l.classRoomId &&
+				teacherId==l.teacherId &&
+				subjectId==l.subjectId &&
+				specialityID==l.specialityID &&
+				isLecture==l.isLecture;
 	}
 }
