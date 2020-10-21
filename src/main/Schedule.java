@@ -132,17 +132,7 @@ public class Schedule implements Cloneable, Comparable{
 		return new Schedule(clonned_specialities);
 	}
 
-	public void crossoverBySpots(Schedule second) {
-//		int crossover_point = (int)(Math.random()*(second.lessons_of_specialities.size()-1));
-//		int[] firstSpotGenes = new int[lessons_of_specialities.size()];
-//		int[] secondSpotGenes = new int[second.lessons_of_specialities.size()];
-//		for(int i = 0; i< lessons_of_specialities.size(); ++i) firstSpotGenes[i] = lessons_of_specialities.get(i).classSpotId;
-//		for(int i = 0; i<second.lessons_of_specialities.size(); ++i) secondSpotGenes[i] = second.lessons_of_specialities.get(i).classSpotId;
-//		int[] crossoveredSpotGenes = crossoverOrder(firstSpotGenes, secondSpotGenes, crossover_point);
-//		for(int i = 0; i< lessons_of_specialities.size(); ++i) lessons_of_specialities.get(i).classSpotId = crossoveredSpotGenes[i];
-	}
-
-	private int[] crossoverOrder(int[] firstSpotGenes, int[] secondSpotGenes, int crossover_point) {
+	private static int[] crossoverOrderArrays(int[] firstSpotGenes, int[] secondSpotGenes, int crossover_point) {
 		int[] crossovered = new int[firstSpotGenes.length];
 		for(int j=0; j<=crossover_point; ++j) crossovered[j]=firstSpotGenes[j];
 		int i=crossover_point+1;
@@ -154,15 +144,9 @@ public class Schedule implements Cloneable, Comparable{
 		return crossovered;
 	}
 
-	private int indexOf(int[] crossovered, int spot_second) {
+	private static int indexOf(int[] crossovered, int spot_second) {
 		for(int i=0; i<crossovered.length; ++i) if(crossovered[i]==spot_second) return i;
 		return -1;
-	}
-
-	public void crossoverByRooms(Schedule second) {
-	}
-
-	public void crossoverByTeachers(Schedule second) {
 	}
 
 	@Override
@@ -213,6 +197,34 @@ public class Schedule implements Cloneable, Comparable{
 		lessons_of_speciality.get(second_index).teacherId = lessons_of_speciality.get(first_index).teacherId;
 		lessons_of_speciality.get(first_index).teacherId = second_teacher_id;
 	}
+
+	public static ArrayList<Lesson> crossoverByTeachers(ArrayList<Lesson> first_lessons, ArrayList<Lesson> second_lessons) {
+		return first_lessons;
+	}
+
+	public static ArrayList<Lesson> crossoverByRooms(ArrayList<Lesson> first_lessons, ArrayList<Lesson> second_lessons) {
+		int crossover_point = (int)(Math.random()*(first_lessons.size()-1));
+		int[] firstRoomGenes = new int[first_lessons.size()];
+		int[] secondRoomGenes = new int[second_lessons.size()];
+		for(int i = 0; i<first_lessons.size(); ++i) firstRoomGenes[i] = first_lessons.get(i).classRoomId;
+		for(int i = 0; i<second_lessons.size(); ++i) secondRoomGenes[i] = second_lessons.get(i).classRoomId;
+		int[] crossoveredRoomGenes = crossoverOrderArrays(firstRoomGenes, secondRoomGenes, crossover_point);
+		ArrayList<Lesson> result = (ArrayList<Lesson>) first_lessons.clone();
+		for(int i = 0; i< first_lessons.size(); ++i) result.get(i).classRoomId = crossoveredRoomGenes[i];
+		return result;
+	}
+
+	public static ArrayList<Lesson> crossoverBySpots(ArrayList<Lesson> first_lessons, ArrayList<Lesson> second_lessons) {
+		int crossover_point = (int)(Math.random()*(first_lessons.size()-1));
+		int[] firstSpotGenes = new int[first_lessons.size()];
+		int[] secondSpotGenes = new int[second_lessons.size()];
+		for(int i = 0; i<first_lessons.size(); ++i) firstSpotGenes[i] = first_lessons.get(i).classSpotId;
+		for(int i = 0; i<second_lessons.size(); ++i) secondSpotGenes[i] = second_lessons.get(i).classSpotId;
+		int[] crossoveredSpotGenes = crossoverOrderArrays(firstSpotGenes, secondSpotGenes, crossover_point);
+		ArrayList<Lesson> result = (ArrayList<Lesson>) first_lessons.clone();
+		for(int i = 0; i< first_lessons.size(); ++i) result.get(i).classSpotId = crossoveredSpotGenes[i];
+		return result;
+	}
 }
 
 class Lesson implements Cloneable{
@@ -253,5 +265,10 @@ class Lesson implements Cloneable{
 				subjectId==l.subjectId &&
 				specialityID==l.specialityID &&
 				isLecture==l.isLecture;
+	}
+
+	public int getAmountRequired() {
+		Subject s = Population.static_requirements.specialities[specialityID].subjects[subjectId];
+		return (isLecture) ? s.amount_of_students_on_lectures : s.amount_of_students_on_seminars;
 	}
 }

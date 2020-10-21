@@ -82,7 +82,7 @@ public class ScheduleRequirements {
 								40, 20, 2)
 				}),
 		};
-		days = new ScheduleDay[6];
+		days = new ScheduleDay[5];
 		int[] classes_spots = new int[2];
 		for(int j=0; j<classes_spots.length; ++j){
 			classes_spots[j]=j;
@@ -178,6 +178,10 @@ class Subject {
 			next_subject_id=0;
 		}
 		this.id = next_subject_id++;
+	}
+
+	public Integer[] getPossibleTeachers(boolean isLecture) {
+		return (isLecture) ? possible_teachers_for_lectures : possible_teachers_for_seminars;
 	}
 }
 

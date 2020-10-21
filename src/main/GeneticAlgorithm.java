@@ -23,8 +23,11 @@ public class GeneticAlgorithm {
 
 	boolean makeStep(){
 		generationCount++;
-		if(generationCount>=10000 || Population.isFinished(population)) return true;
-		offsprings = population.evolve(1, 0.8, 0.05);
+		if(generationCount>=1500 || Population.isFinished(population)) {
+			System.out.println(SchedulePrinter.scheduleToString(population.chromosomes[0]));
+			return true;
+		}
+		offsprings = population.evolve(1, 0.8, 0.15);
 		System.out.println("Average "+generationCount+" is "+offsprings.averageFitness());
 		System.out.println("Max "+generationCount+" is "+offsprings.chromosomes[0].getFitness());
 		System.out.println("Amount of unique "+offsprings.amountOfUnique());

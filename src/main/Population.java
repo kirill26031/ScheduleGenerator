@@ -2,13 +2,11 @@ package main;
 
 import java.util.*;
 
-import static main.SchedulePrinter.scheduleToString;
-
 public class Population {
 	Schedule[] chromosomes;
 	static ScheduleRequirements static_requirements;
 	static int static_populationSize;
-	static int tournament_size=5;
+	static int tournament_size=3;
 
 	public Population(Schedule[] chromosomes){
 		this.chromosomes = chromosomes;
@@ -99,6 +97,23 @@ public class Population {
 		return crossovered;
 	}
 
+	private Schedule crossoverOrder(Schedule first, Schedule second) {
+		boolean[] do_crossover_for_specialities = randomBooleanArray(first.lessons_of_specialities.length);
+		Schedule new_schedule = first.clone();
+		for(int k=0; k<do_crossover_for_specialities.length; ++k){
+			if(do_crossover_for_specialities[k]){
+				boolean[] crossover_types = randomBooleanArray(3);
+				if(crossover_types[0]) new_schedule.lessons_of_specialities[k] =
+						Schedule.crossoverByRooms(first.lessons_of_specialities[k], second.lessons_of_specialities[k]);
+				if(crossover_types[1]) new_schedule.lessons_of_specialities[k] =
+						Schedule.crossoverBySpots(first.lessons_of_specialities[k], second.lessons_of_specialities[k]);
+				if(crossover_types[1]) new_schedule.lessons_of_specialities[k] =
+						Schedule.crossoverByTeachers(first.lessons_of_specialities[k], second.lessons_of_specialities[k]);
+			}
+		}
+		return new_schedule;
+	}
+
 	private boolean[] randomBooleanArray(int length) {
 		boolean[] res = new boolean[length];
 		for(int i=0; i<length; ++i) res[i] = Math.random()<0.5;
@@ -107,18 +122,35 @@ public class Population {
 
 	private Schedule mutation(Schedule chromosome)
 	{
-//		int room = (int)(Math.random()*chromosome.lessons_of_specialities.size());
-//		int spot = (int)(Math.random()*chromosome.lessons_of_specialities.size());
-//
-//		int sbjIdR = chromosome.lessons_of_specialities.get(room).subjectId;
-//
-//		switch ((int)(Math.random()*2)){
-//			case 0: chromosome.lessons_of_specialities.get(room).classRoomId = (int)(Math.random()*(chromosome.lessons_of_specialities.get(room).isLecture ? static_requirements.subjects[chromosome.lessons_of_specialities.get(room).subjectId].amount_of_students_on_lectures : static_requirements.subjects[chromosome.lessons_of_specialities.get(room).subjectId].amount_of_students_on_seminars)); break;
-//			case 1: chromosome.lessons_of_specialities.get(spot).classSpotId = (int)(Math.random()*(chromosome.lessons_of_specialities.get(spot).isLecture ? static_requirements.subjects[chromosome.lessons_of_specialities.get(spot).subjectId].amount_of_students_on_lectures : static_requirements.subjects[chromosome.lessons_of_specialities.get(spot).subjectId].amount_of_students_on_seminars)); break;
-//			default: break;
-//		}
-
-		return mutateOrder(chromosome);
+		if(Math.random()<0.5){
+			boolean[] specialities = randomBooleanArray(chromosome.lessons_of_specialities.length);
+			for(int i=0; i<specialities.length; ++i){
+				ArrayList<Lesson> lessons = chromosome.lessons_of_specialities[i];
+				boolean[] types = randomBooleanArray(3);
+				int first_index = (int)(Math.random()*lessons.size());
+				Subject s = Population.static_requirements.specialities[i].subjects[lessons.get(first_index).subjectId];
+				if(types[0]){
+					//spot
+					ArrayList<Integer> spots = static_requirements.getSpots();
+					int random_spot_id = spots.get((int)(Math.random()*spots.size()));
+					lessons.get(first_index).classSpotId=random_spot_id;
+				}
+				if(types[1]){
+					//room
+					ArrayList<Integer> rooms = static_requirements.getRooms(lessons.get(first_index).getAmountRequired());
+					int random_room_id = rooms.get((int)(Math.random()*rooms.size()));
+					lessons.get(first_index).classRoomId=random_room_id;
+				}
+				if(types[2]){
+					//teacher
+					Integer[] teachers = s.getPossibleTeachers(lessons.get(first_index).isLecture);
+					int random_teacher_id = teachers[(int)(Math.random()*teachers.length)];
+					lessons.get(first_index).teacherId=random_teacher_id;
+				}
+			}
+			return chromosome;
+		}
+		else return mutateOrder(chromosome);
 	}
 
 	private Schedule mutateOrder(Schedule chromosome) {
