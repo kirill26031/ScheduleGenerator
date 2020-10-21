@@ -85,9 +85,6 @@ public class Population {
 		for(int k=0; k<crossovered.lessons_of_specialities.length; ++k) {
 			crossovered.lessons_of_specialities[k] = new ArrayList<>(first.lessons_of_specialities[k].size());
 			if(do_crossover_of_specialities[k]){
-				if(first.lessons_of_specialities[k].size()!=second.lessons_of_specialities[k].size()){
-					System.out.println("bug size");
-				}
 				int pivot = (int)(Math.random()*first.lessons_of_specialities[k].size());
 				for(int i = 0; i < first.lessons_of_specialities[k].size(); i++)
 				{
@@ -156,13 +153,6 @@ public class Population {
 		int[] sizes = {chromosomes[0].lessons_of_specialities[0].size(),
 				chromosomes[0].lessons_of_specialities[1].size(),
 				chromosomes[0].lessons_of_specialities[2].size()};
-		for(int i=0; i<chromosomes.length; ++i){
-			if(chromosomes[i].lessons_of_specialities[0].size()!=sizes[0] ||
-					chromosomes[i].lessons_of_specialities[1].size()!=sizes[1] ||
-					chromosomes[i].lessons_of_specialities[2].size()!=sizes[2]){
-				System.out.println("bug");
-			}
-		}
 		Arrays.sort(chromosomes);
 //		System.out.println(SchedulePrinter.scheduleToString(chromosomes[0]));
 //		System.out.println(chromosomes[0].getFitness());
@@ -175,26 +165,9 @@ public class Population {
 			if(Math.random()<crossover_propability){
 				Schedule second = selectScheduleByTournament();
 				new_schedules[i] = crossover(first.clone(), second.clone());
-				if(new_schedules[i].lessons_of_specialities[0].size()!=sizes[0] ||
-						new_schedules[i].lessons_of_specialities[1].size()!=sizes[1] ||
-						new_schedules[i].lessons_of_specialities[2].size()!=sizes[2]){
-					System.out.println("bug");
-				}
 			}
 			else{
 				new_schedules[i]=first.clone();
-				if(new_schedules[i].lessons_of_specialities[0].size()!=sizes[0] ||
-						new_schedules[i].lessons_of_specialities[1].size()!=sizes[1] ||
-						new_schedules[i].lessons_of_specialities[2].size()!=sizes[2]){
-					System.out.println("bug");
-				}
-			}
-		}
-		for(int i=0; i<new_schedules.length; ++i){
-			if(new_schedules[i].lessons_of_specialities[0].size()!=sizes[0] ||
-					new_schedules[i].lessons_of_specialities[1].size()!=sizes[1] ||
-					new_schedules[i].lessons_of_specialities[2].size()!=sizes[2]){
-				System.out.println("bug");
 			}
 		}
 		return new Population(new_schedules);

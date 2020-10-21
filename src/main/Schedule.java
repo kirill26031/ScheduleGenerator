@@ -129,11 +129,6 @@ public class Schedule implements Cloneable, Comparable{
 			}
 			clonned_specialities[i] = new_lessons;
 		}
-		if(lessons_of_specialities[0].size()+lessons_of_specialities[1].size()+lessons_of_specialities[2].size()
-			!= clonned_specialities[0].size()+clonned_specialities[1].size()+clonned_specialities[2].size()
-		){
-			System.out.println("clonning bug");
-		}
 		return new Schedule(clonned_specialities);
 	}
 
