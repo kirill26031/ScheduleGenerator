@@ -105,12 +105,6 @@ public class Population {
 		return res;
 	}
 
-	public void doMutation(int elitism_offset, double mutation_propability) {
-		for(int i=elitism_offset; i<chromosomes.length; ++i){
-			if(Math.random()<=mutation_propability) chromosomes[i]=mutation(chromosomes[i]);
-		}
-	}
-
 	private Schedule mutation(Schedule chromosome)
 	{
 //		int room = (int)(Math.random()*chromosome.lessons_of_specialities.size());
@@ -124,7 +118,20 @@ public class Population {
 //			default: break;
 //		}
 
-		return  chromosome;
+		return mutateOrder(chromosome);
+	}
+
+	private Schedule mutateOrder(Schedule chromosome) {
+		boolean[] do_mutate_for_specialities = randomBooleanArray(chromosome.lessons_of_specialities.length);
+		for(int k=0; k<do_mutate_for_specialities.length; ++k){
+			if(do_mutate_for_specialities[k]){
+				boolean[] mutation_types = randomBooleanArray(3);
+				if(mutation_types[0]) chromosome.mutateOrderByRoom(chromosome.lessons_of_specialities[k]);
+				if(mutation_types[1]) chromosome.mutateOrderBySpot(chromosome.lessons_of_specialities[k]);
+				if(mutation_types[2]) chromosome.mutateOrderByTeacher(chromosome.lessons_of_specialities[k]);
+			}
+		}
+		return chromosome;
 	}
 
 	public void newGeneration(Population offsprings){
@@ -150,25 +157,26 @@ public class Population {
 	}
 
 	public Population evolve(int elitism_offset, double crossover_propability, double mutation_propability) {
-		int[] sizes = {chromosomes[0].lessons_of_specialities[0].size(),
-				chromosomes[0].lessons_of_specialities[1].size(),
-				chromosomes[0].lessons_of_specialities[2].size()};
-		Arrays.sort(chromosomes);
 //		System.out.println(SchedulePrinter.scheduleToString(chromosomes[0]));
 //		System.out.println(chromosomes[0].getFitness());
 		Schedule[] new_schedules = new Schedule[chromosomes.length];
-		for(int i=0; i<elitism_offset && i<new_schedules.length; ++i){
-			new_schedules[i] = chromosomes[i].clone();
-		}
 		for(int i=elitism_offset; i<new_schedules.length; ++i){
 			Schedule first = selectScheduleByTournament();
 			if(Math.random()<crossover_propability){
-				Schedule second = selectScheduleByTournament();
+				Schedule second = first;
+				while(first==second) second = selectScheduleByTournament();
 				new_schedules[i] = crossover(first.clone(), second.clone());
 			}
 			else{
 				new_schedules[i]=first.clone();
 			}
+			if(Math.random()<mutation_propability){
+				new_schedules[i] = mutation(new_schedules[i]);
+			}
+		}
+		Arrays.sort(chromosomes);
+		for(int i=0; i<elitism_offset && i<new_schedules.length; ++i){
+			new_schedules[i] = chromosomes[i].clone();
 		}
 		return new Population(new_schedules);
 	}
@@ -191,7 +199,14 @@ public class Population {
 	}
 
 	public int amountOfUnique() {
-		TreeSet<Schedule> set = new TreeSet<>();
+		TreeSet<Schedule> set = new TreeSet<>(new Comparator<Schedule>() {
+			@Override
+			public int compare(Schedule o1, Schedule o2) {
+				int compared = o1.compareTo(o2);
+				if(compared!=0) return compared;
+				return o1.equals(o2) ? 0 : 1;
+			}
+		});
 		for(Schedule s : chromosomes) {
 			set.add(s);
 		}

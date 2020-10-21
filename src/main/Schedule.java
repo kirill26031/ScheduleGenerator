@@ -168,10 +168,7 @@ public class Schedule implements Cloneable, Comparable{
 	@Override
 	public int compareTo(Object o) {
 		int compared =  ((Schedule)o).getFitness()-getFitness();
-		if(compared==0) {
-			return equals(o) ? 0 : 1;
-		}
-		else return compared;
+		return compared;
 	}
 
 	@Override
@@ -182,6 +179,39 @@ public class Schedule implements Cloneable, Comparable{
 			}
 		}
 		return true;
+	}
+
+	public void mutateOrderByRoom(ArrayList<Lesson> lessons_of_speciality) {
+		int first_index = (int)(Math.random()*lessons_of_speciality.size());
+		int second_index = first_index;
+		while(first_index==second_index) second_index = (int)(Math.random()*lessons_of_speciality.size());
+		int second_room = lessons_of_speciality.get(second_index).classRoomId;
+		lessons_of_speciality.get(second_index).classRoomId=lessons_of_speciality.get(first_index).classRoomId;
+		lessons_of_speciality.get(first_index).classRoomId=second_room;
+	}
+
+	public void mutateOrderBySpot(ArrayList<Lesson> lessons_of_speciality) {
+		int first_index = (int)(Math.random()*lessons_of_speciality.size());
+		int second_index = first_index;
+		while(first_index==second_index) second_index = (int)(Math.random()*lessons_of_speciality.size());
+		int second_spot = lessons_of_speciality.get(second_index).classSpotId;
+		lessons_of_speciality.get(second_index).classSpotId=lessons_of_speciality.get(first_index).classSpotId;
+		lessons_of_speciality.get(first_index).classSpotId=second_spot;
+	}
+
+	public void mutateOrderByTeacher(ArrayList<Lesson> lessons_of_speciality) {
+		int first_index = (int)(Math.random()*lessons_of_speciality.size());
+		int subject_id = lessons_of_speciality.get(first_index).subjectId;
+		ArrayList<Integer> indicies_of_this_subject = new ArrayList<>();
+		for(int i=0; i<lessons_of_speciality.size(); ++i){
+			if(lessons_of_speciality.get(i).subjectId==subject_id) indicies_of_this_subject.add(i);
+		}
+		if(indicies_of_this_subject.size()==1) return;
+		int second_index = first_index;
+		while(first_index==second_index) second_index = (int)(Math.random()*indicies_of_this_subject.size());
+		int second_teacher_id = lessons_of_speciality.get(second_index).teacherId;
+		lessons_of_speciality.get(second_index).teacherId = lessons_of_speciality.get(first_index).teacherId;
+		lessons_of_speciality.get(first_index).teacherId = second_teacher_id;
 	}
 }
 

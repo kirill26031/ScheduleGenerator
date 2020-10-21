@@ -23,7 +23,7 @@ public class GeneticAlgorithm {
 
 	boolean makeStep(){
 		generationCount++;
-		if(generationCount>=100 || Population.isFinished(population)) return true;
+		if(generationCount>=10000 || Population.isFinished(population)) return true;
 		offsprings = population.evolve(1, 0.8, 0.05);
 		System.out.println("Average "+generationCount+" is "+offsprings.averageFitness());
 		System.out.println("Max "+generationCount+" is "+offsprings.chromosomes[0].getFitness());
