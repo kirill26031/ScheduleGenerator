@@ -15,9 +15,9 @@ public class ScheduleRequirements {
 	public ScheduleRequirements(){
 		teachers = new Teacher[]{
 				new Teacher("Michael Arson"),
-				new Teacher("Volodymyr Petrenko"),
+				new Teacher("Petrenko Volodymyr"),
 				new Teacher("Orest Ivanenko"),
-				new Teacher("Kozerenko"),
+				new Teacher("Kozerenko Sergiy Oleksandrovich"),
 				new Teacher("Voznyuk Yaroslav Ivanovych"),
 				new Teacher("Veretelnyk Roman")
 		};

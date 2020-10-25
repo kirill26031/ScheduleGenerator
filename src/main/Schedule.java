@@ -252,6 +252,24 @@ class Lesson implements Cloneable{
 	}
 
 	@Override
+	public String toString(){
+		StringBuilder sb = new StringBuilder();
+		sb.append("\nНазва: ");
+		Subject subject = Population.static_requirements.specialities[specialityID].subjects[subjectId];
+		sb.append(subject.name);
+		sb.append("\nТип: "+((isLecture) ? "Лекція" : "Семінар"));
+		sb.append("\nВикладач: ");
+		sb.append(Population.static_requirements.teachers[teacherId].fullname);
+		sb.append("\nКімната: ");
+		ClassRoom room = Population.static_requirements.classes[classRoomId];
+		sb.append(room.name);
+		sb.append("\n\tРозмір: "+room.size);
+		sb.append("\n\tНеобхідний розмір: "+
+				((isLecture)?subject.amount_of_students_on_lectures:subject.amount_of_students_on_seminars));
+		return sb.toString();
+	}
+
+	@Override
 	protected Lesson clone(){
 		return new Lesson(classSpotId, classRoomId, teacherId, subjectId, specialityID, isLecture);
 	}

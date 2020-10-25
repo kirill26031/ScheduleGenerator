@@ -24,9 +24,9 @@ public class SchedulePrinter {
                 sb.append(" has these lessons:");
                 for (Lesson l : lessons) {
                     if (l.classSpotId == i) {
-                        sb.append("\nLesson#");
-                        sb.append(lessonsPerSpot + "\n");
-                        sb.append(lessonToString(l));
+                        sb.append("\nУрок #");
+                        sb.append(lessonsPerSpot);
+                        sb.append(l.toString());
                         lessonsPerSpot++;
                     }
                 }
