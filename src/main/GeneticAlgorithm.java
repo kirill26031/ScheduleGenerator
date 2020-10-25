@@ -16,21 +16,24 @@ public class GeneticAlgorithm {
 		this.requirements = requirements;
 		population = Population.randomPopulation(requirements, populationSize);
 		Arrays.sort(population.chromosomes);
-		System.out.println("Average "+generationCount+" is "+population.averageFitness());
-		System.out.println("Max "+generationCount+" is "+population.chromosomes[0].getFitness());
-		System.out.println("Amount of unique "+population.amountOfUnique());
+		System.out.println(requirements);
+//		System.out.println("Average "+generationCount+" is "+population.averageFitness());
+//		System.out.println("Max "+generationCount+" is "+population.chromosomes[0].getFitness());
+//		System.out.println("Amount of unique "+population.amountOfUnique());
 	}
 
 	boolean makeStep(){
 		generationCount++;
 		if(generationCount>=1500 || Population.isFinished(population)) {
+			System.out.println("Generation: "+generationCount);
+			System.out.println("Best fitness: "+population.chromosomes[0].getFitness());
 			System.out.println(SchedulePrinter.scheduleToString(population.chromosomes[0]));
 			return true;
 		}
 		offsprings = population.evolve(1, 0.8, 0.15);
-		System.out.println("Average "+generationCount+" is "+offsprings.averageFitness());
-		System.out.println("Max "+generationCount+" is "+offsprings.chromosomes[0].getFitness());
-		System.out.println("Amount of unique "+offsprings.amountOfUnique());
+//		System.out.println("Average "+generationCount+" is "+offsprings.averageFitness());
+//		System.out.println("Max "+generationCount+" is "+offsprings.chromosomes[0].getFitness());
+//		System.out.println("Amount of unique "+offsprings.amountOfUnique());
 //		// crossover possibly has bugs
 //		offsprings = population.doCrossover(1,0.8);
 //		// mutation empty

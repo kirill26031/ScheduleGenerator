@@ -110,6 +110,46 @@ public class ScheduleRequirements {
 		for(int i=0; i<classes.length; ++i) if(classes[i].size>=min_size) rooms.add(i);
 		return rooms;
 	}
+
+	@Override
+	public String toString(){
+		StringBuilder sb = new StringBuilder();
+		sb.append("Вимоги до розкладу:");
+		for(Speciality speciality : specialities){
+			sb.append("\n\nПредмети для спеціальності \"");
+			sb.append(speciality.name);
+			sb.append("\"");
+			for(Subject subject : speciality.subjects){
+				sb.append("\n\t");
+				sb.append(subject.name);
+				sb.append("\n\tКількість лекцій: ");
+				sb.append(subject.lectures_amount);
+				if(subject.lectures_amount!=0){
+					sb.append("\n\tВикладачі кваліфіковані викладати лекції:");
+					for(Integer teacher_index : subject.possible_teachers_for_lectures){
+						sb.append("\n\t\t");
+						sb.append(teachers[teacher_index].fullname);
+					}
+					sb.append("\n\tКімната має вміщати ");
+					sb.append(subject.amount_of_students_on_lectures);
+					sb.append(" осіб");
+				}
+				sb.append("\n\tКількість семінарів: ");
+				sb.append(subject.seminars_amount);
+				if(subject.seminars_amount!=0){
+					sb.append("\n\tВикладачі кваліфіковані викладати семінари:");
+					for(Integer teacher_index : subject.possible_teachers_for_seminars){
+						sb.append("\n\t\t");
+						sb.append(teachers[teacher_index].fullname);
+					}
+					sb.append("\n\tКімната має вміщати ");
+					sb.append(subject.amount_of_students_on_seminars);
+					sb.append(" осіб");
+				}
+			}
+		}
+		return sb.toString();
+	}
 }
 
 class Speciality {
@@ -189,11 +229,17 @@ class ScheduleDay {
 	int day;
 	ClassSpot[] spots;
 	static int next_spot_id=0;
+	static String[] days = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
 
 	public ScheduleDay(int[] classPositions, int day){
 		spots = new ClassSpot[classPositions.length];
 		for(int i=0; i<classPositions.length; ++i) spots[i] = new ClassSpot(classPositions[i]);
 		this.day = day;
+	}
+
+	@Override
+	public String toString(){
+		return days[day%7];
 	}
 
 	class ClassSpot {
