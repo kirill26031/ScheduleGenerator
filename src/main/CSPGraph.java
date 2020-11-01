@@ -1,73 +1,74 @@
 package main;
 
-import com.sun.tools.javac.util.Pair;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.TreeSet;
 import java.util.function.BiConsumer;
 
 public class CSPGraph {
-//	Lesson[] nodes;
-//	ArrayList<Lesson> current_nodes;
-	// nodes grouped by specialities
-	ArrayList<Lesson>[] grouped_nodes;
-	ArrayList<Lesson>[] current_grouped_nodes;
-	ArrayList<Pair<Lesson, Lesson>> connections;
-	boolean finished = false;
-	int max_spot_id;
+	ArrayList<Vertex<LessonVertex>> vertices = new ArrayList<>();
 
 	public CSPGraph(ArrayList<Lesson>[] lessons_of_specialities) {
-		this.grouped_nodes = lessons_of_specialities;
-		this.connections = new ArrayList<>();
-		this.max_spot_id = Main.requirements.spots.size()-1;
+		for (int i = 0; i < lessons_of_specialities.length; ++i) {
+			for (int j = 0; j < lessons_of_specialities[i].size(); ++j) {
+				vertices.add(new Vertex<LessonVertex>(getPossibleValues(lessons_of_specialities[i].get(j))));
+			}
+		}
+	for(Vertex<LessonVertex> v : vertices){
+		ArrayList<VertexRestriction<LessonVertex>> neighbours = new ArrayList<>();
+		for(Vertex<LessonVertex> other_v : vertices){
+			if(v.possible_values.get(0).lesson.specialityID == other_v.possible_values.get(0).lesson.specialityID &&
+				!v.equals(other_v)){
+				neighbours.add(new VertexRestriction(other_v, 0));
+			}
+		}
+		v.setNeighbours(neighbours);
+	}
 	}
 
-	public ArrayList<Lesson> solve(){
-		current_grouped_nodes = new ArrayList[grouped_nodes.length];
-		for(int j=0; j<grouped_nodes[0].size(); ++j) {
-			grouped_nodes[0].get(j).classSpotId = j;
+	private ArrayList<LessonVertex> getPossibleValues(Lesson lesson) {
+		ArrayList<LessonVertex> all_values = new ArrayList<>(Main.requirements.spots.size());
+		for(int i=0; i<Main.requirements.spots.size(); ++i){
+			all_values.add(new LessonVertex(lesson, i));
 		}
-		for(int i=0; i<current_grouped_nodes.length; ++i){
-			current_grouped_nodes[i] = (ArrayList<Lesson>) grouped_nodes[i].clone();
-		}
-
-		while(!finished){
-//			current_grouped_nodes = nextSolution();
-
-		}
-
-//		for(int i=1; i<current_grouped_nodes.length && !finished; ++i){
-//			last_spot_for_lesson[i] = new int[current_grouped_nodes[i].size()];
-//			for(int j=0; j<current_grouped_nodes[i].size() && !finished; ++j){
-//				for(int k=last_spot_for_lesson[i][j]; k<=max_spot_id; ++k){
-//
-//				}
-//				if(i==current_grouped_nodes.length-1 && j==current_grouped_nodes[i].size()-1){
-//					finished=true;
-//				}
-//			}
-//		}
-		return collectAll(current_grouped_nodes);
+		return all_values;
 	}
 
-	private ArrayList<Lesson> collectAll(ArrayList<Lesson>[] current_grouped_nodes) {
-	return null;
+	private class LessonVertex {
+		Lesson lesson;
+		int spot_id;
+		public LessonVertex(Lesson l, int spot_id){
+			this.lesson=l;
+			this.spot_id=spot_id;
+		}
+
+		@Override
+		public String toString(){
+			return "spot: "+spot_id+" , lesson: "+lesson.toString();
+		}
 	}
 
+	class VertexRestriction<T> {
+		Vertex<T> vertex;
+		int restriction_type;
 
+		public VertexRestriction(Vertex<T> vertex, int restriction_type){
+			this.vertex=vertex;
+			this.restriction_type = restriction_type;
+		}
+	}
 }
 
 class Vertex<T>{
 	T value=null;
 	ArrayList<T> possible_values;
-	ArrayList<Vertex<T>> neighbours = null;
+	ArrayList<CSPGraph.VertexRestriction<T>> neighbours = null;
 
 	Vertex(ArrayList<T> possible_values){
 		this.possible_values = possible_values;
 	}
 
-	void setNeighbours(ArrayList<Vertex<T>> neighbours){
+	void setNeighbours(ArrayList<CSPGraph.VertexRestriction<T>> neighbours){
 		this.neighbours = neighbours;
 	}
 
@@ -75,4 +76,8 @@ class Vertex<T>{
 		this.value=value;
 	}
 
+	@Override
+	public String toString(){
+		return ((value!=null) ? "value: "+value.toString() : possible_values.toString())+" , neighbours: "+neighbours.toString();
+	}
 }
