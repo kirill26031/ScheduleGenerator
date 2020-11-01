@@ -1,11 +1,11 @@
 package main;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+//import com.google.gson.Gson;
+//import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 
 public class SchedulePrinter {
-    private static Gson gson = new GsonBuilder().setPrettyPrinting().create();
+//    private static Gson gson = new GsonBuilder().setPrettyPrinting().create();
     public static String scheduleToString(Schedule sc){
         StringBuilder sb = new StringBuilder();
         sb.append("\n\tSCHEDULE\n");
@@ -39,16 +39,16 @@ public class SchedulePrinter {
         return sb.toString();
     }
 
-    public static String lessonToString(Lesson les){
-        BtLesson beautifiedLesson = new BtLesson(les.classSpotId,
-                les.classRoomId,
-                Population.static_requirements.teachers[les.teacherId].fullname,
-                Population.static_requirements.specialities[les.specialityID].subjects[les.subjectId].name,
-                (les.isLecture? "Lecture": "Practice"),
-                Population.static_requirements.classes[les.classRoomId].size);
-
-        return gson.toJson(beautifiedLesson);
-    }
+//    public static String lessonToString(Lesson les){
+//        BtLesson beautifiedLesson = new BtLesson(les.classSpotId,
+//                les.classRoomId,
+//                Population.static_requirements.teachers[les.teacherId].fullname,
+//                Population.static_requirements.specialities[les.specialityID].subjects[les.subjectId].name,
+//                (les.isLecture? "Lecture": "Practice"),
+//                Population.static_requirements.classes[les.classRoomId].size);
+//
+//        return gson.toJson(beautifiedLesson);
+//    }
 
 }
 
