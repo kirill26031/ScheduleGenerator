@@ -236,6 +236,19 @@ class Lesson implements Cloneable{
 	boolean isLecture;
 
 	public Lesson(
+			int subjectId,
+			int specialityID,
+			boolean isLecture
+	){
+		this.classSpotId = -1;
+		this.classRoomId = -1;
+		this.teacherId = -1;
+		this.subjectId = subjectId;
+		this.specialityID = specialityID;
+		this.isLecture = isLecture;
+	}
+
+	public Lesson(
 			int classSpotId,
 			int classRoomId,
 			int teacherId,
@@ -258,14 +271,14 @@ class Lesson implements Cloneable{
 		Subject subject = Population.static_requirements.specialities[specialityID].subjects[subjectId];
 		sb.append(subject.name);
 		sb.append("\nТип: "+((isLecture) ? "Лекція" : "Семінар"));
-		sb.append("\nВикладач: ");
-		sb.append(Population.static_requirements.teachers[teacherId].fullname);
-		sb.append("\nКімната: ");
-		ClassRoom room = Population.static_requirements.classes[classRoomId];
-		sb.append(room.name);
-		sb.append("\n\tРозмір: "+room.size);
-		sb.append("\n\tНеобхідний розмір: "+
-				((isLecture)?subject.amount_of_students_on_lectures:subject.amount_of_students_on_seminars));
+//		sb.append("\nВикладач: ");
+//		sb.append(Population.static_requirements.teachers[teacherId].fullname);
+//		sb.append("\nКімната: ");
+//		ClassRoom room = Population.static_requirements.classes[classRoomId];
+//		sb.append(room.name);
+//		sb.append("\n\tРозмір: "+room.size);
+//		sb.append("\n\tНеобхідний розмір: "+
+//				((isLecture)?subject.amount_of_students_on_lectures:subject.amount_of_students_on_seminars));
 		return sb.toString();
 	}
 
