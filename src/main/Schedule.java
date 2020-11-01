@@ -77,6 +77,15 @@ public class Schedule implements Cloneable, Comparable{
 		return freeSpots.get((int)(Math.random()*freeSpots.size()));
 	}
 
+	public static Schedule formatSchedule(ArrayList<Lesson> unformatted_schedule) {
+		ArrayList<Lesson>[] res_arr = new ArrayList[Main.requirements.specialities.length];
+		for(int i=0; i<res_arr.length; ++i) res_arr[i] = new ArrayList<>();
+		for(Lesson l : unformatted_schedule){
+			res_arr[l.specialityID].add(l);
+		}
+		return new Schedule(res_arr);
+	}
+
 	private int fitnessCalculate() {
 		int teacher_errors = 0;
 		int room_spot_errors = 0;
@@ -101,7 +110,7 @@ public class Schedule implements Cloneable, Comparable{
 			}
 		}
 		for(int i=0; i<all_lessons.size(); ++i){
-			Subject subject = Population.static_requirements.specialities[
+			Subject subject = Main.requirements.specialities[
 					all_lessons.get(i).specialityID
 					].subjects[
 							all_lessons.get(i).subjectId
@@ -109,7 +118,7 @@ public class Schedule implements Cloneable, Comparable{
 			int required_size = (all_lessons.get(i).isLecture) ?
 					subject.amount_of_students_on_lectures :
 					subject.amount_of_students_on_seminars;
-			if(Population.static_requirements.classes[all_lessons.get(i).classRoomId].size<required_size){
+			if(Main.requirements.classes[all_lessons.get(i).classRoomId].size<required_size){
 				room_size_errors++;
 			}
 		}
@@ -268,13 +277,13 @@ class Lesson implements Cloneable{
 	public String toString(){
 		StringBuilder sb = new StringBuilder();
 		sb.append("\nНазва: ");
-		Subject subject = Population.static_requirements.specialities[specialityID].subjects[subjectId];
+		Subject subject = Main.requirements.specialities[specialityID].subjects[subjectId];
 		sb.append(subject.name);
 		sb.append("\nТип: "+((isLecture) ? "Лекція" : "Семінар"));
 //		sb.append("\nВикладач: ");
-//		sb.append(Population.static_requirements.teachers[teacherId].fullname);
+//		sb.append(Main.requirements.teachers[teacherId].fullname);
 //		sb.append("\nКімната: ");
-//		ClassRoom room = Population.static_requirements.classes[classRoomId];
+//		ClassRoom room = Main.requirements.classes[classRoomId];
 //		sb.append(room.name);
 //		sb.append("\n\tРозмір: "+room.size);
 //		sb.append("\n\tНеобхідний розмір: "+
@@ -299,7 +308,7 @@ class Lesson implements Cloneable{
 	}
 
 	public int getAmountRequired() {
-		Subject s = Population.static_requirements.specialities[specialityID].subjects[subjectId];
+		Subject s = Main.requirements.specialities[specialityID].subjects[subjectId];
 		return (isLecture) ? s.amount_of_students_on_lectures : s.amount_of_students_on_seminars;
 	}
 }

@@ -11,7 +11,7 @@ public class SchedulePrinter {
         sb.append("\n\tSCHEDULE\n");
         for(int k=0; k<sc.lessons_of_specialities.length; ++k) {
             ArrayList<Lesson> lessons = sc.lessons_of_specialities[k];
-            sb.append("\nSpeciality: "+Population.static_requirements.specialities[k].name+"\n");
+            sb.append("\nSpeciality: "+Main.requirements.specialities[k].name+"\n");
             int maxSpot = 0;
 
             for (Lesson l : lessons) {
@@ -42,10 +42,10 @@ public class SchedulePrinter {
 //    public static String lessonToString(Lesson les){
 //        BtLesson beautifiedLesson = new BtLesson(les.classSpotId,
 //                les.classRoomId,
-//                Population.static_requirements.teachers[les.teacherId].fullname,
-//                Population.static_requirements.specialities[les.specialityID].subjects[les.subjectId].name,
+//                Main.requirements.teachers[les.teacherId].fullname,
+//                Main.requirements.specialities[les.specialityID].subjects[les.subjectId].name,
 //                (les.isLecture? "Lecture": "Practice"),
-//                Population.static_requirements.classes[les.classRoomId].size);
+//                Main.requirements.classes[les.classRoomId].size);
 //
 //        return gson.toJson(beautifiedLesson);
 //    }

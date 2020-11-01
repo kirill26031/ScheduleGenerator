@@ -16,7 +16,11 @@ public class Main {
 				}
 			}
 			CSPGraph csp = new CSPGraph(lessons_of_specialities);
-			System.out.println("here");
+			ArrayList<Lesson> result = csp.findNextSolution();
+			schedule = Schedule.formatSchedule(result);
+//			result+="\nBest fitness: "+population.chromosomes[0].getFitness();
+			System.out.println(SchedulePrinter.scheduleToString(schedule));
+//			System.out.println("here");
 //			GeneticAlgorithm ga = new GeneticAlgorithm(data);
 //			boolean finished=false;
 //			while(!finished) finished=ga.makeStep();
