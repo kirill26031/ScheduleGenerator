@@ -1,6 +1,7 @@
 package main;
 
 
+import java.io.FileWriter;
 import java.util.ArrayList;
 
 public class Main {
@@ -18,12 +19,18 @@ public class Main {
 			CSPGraph csp = new CSPGraph(lessons_of_specialities);
 			ArrayList<Lesson> result = csp.findNextSolution();
 			schedule = Schedule.formatSchedule(result);
-//			result+="\nBest fitness: "+population.chromosomes[0].getFitness();
-			System.out.println(SchedulePrinter.scheduleToString(schedule));
-//			System.out.println("here");
-//			GeneticAlgorithm ga = new GeneticAlgorithm(data);
-//			boolean finished=false;
-//			while(!finished) finished=ga.makeStep();
+
+			String result_str = SchedulePrinter.scheduleToString(schedule);
+			result_str+="\n\n\nCorrect: "+(schedule.getFitness()==0);
+			write("log.txt", result_str);
 		}
 
+	public	static void write(String filename, String string){
+		try{
+			FileWriter fw = new FileWriter(filename);
+			fw.write(string);
+			fw.close();
+		}
+		catch(Exception e){e.printStackTrace();}
+	}
 }

@@ -33,7 +33,7 @@ public class GeneticAlgorithm {
 			result+="\n\n\nGeneration: "+generationCount;
 			result+="\nBest fitness: "+population.chromosomes[0].getFitness();
 			result+="\n"+SchedulePrinter.scheduleToString(population.chromosomes[0]);
-			write("log.txt", result);
+			Main.write("log.txt", result);
 			return true;
 		}
 		offsprings = population.evolve(1, 0.8, 0.15);
@@ -47,15 +47,6 @@ public class GeneticAlgorithm {
 //		population.newGeneration(offsprings);
 		population=offsprings;
 		return false;
-	}
-
-	void write(String filename, String string){
-		try{
-			FileWriter fw = new FileWriter(filename);
-			fw.write(string);
-			fw.close();
-		}
-		catch(Exception e){e.printStackTrace();}
 	}
 }
 

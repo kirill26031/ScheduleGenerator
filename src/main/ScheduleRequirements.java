@@ -223,6 +223,10 @@ class Subject {
 	public Integer[] getPossibleTeachers(boolean isLecture) {
 		return (isLecture) ? possible_teachers_for_lectures : possible_teachers_for_seminars;
 	}
+
+	public int getStudentsAmount(boolean isLecture) {
+		return isLecture ? amount_of_students_on_lectures : amount_of_students_on_seminars;
+	}
 }
 
 class ScheduleDay {

@@ -280,14 +280,14 @@ class Lesson implements Cloneable{
 		Subject subject = Main.requirements.specialities[specialityID].subjects[subjectId];
 		sb.append(subject.name);
 		sb.append("\nТип: "+((isLecture) ? "Лекція" : "Семінар"));
-//		sb.append("\nВикладач: ");
-//		sb.append(Main.requirements.teachers[teacherId].fullname);
-//		sb.append("\nКімната: ");
-//		ClassRoom room = Main.requirements.classes[classRoomId];
-//		sb.append(room.name);
-//		sb.append("\n\tРозмір: "+room.size);
-//		sb.append("\n\tНеобхідний розмір: "+
-//				((isLecture)?subject.amount_of_students_on_lectures:subject.amount_of_students_on_seminars));
+		sb.append("\nВикладач: ");
+		sb.append(Main.requirements.teachers[teacherId].fullname);
+		sb.append("\nКімната: ");
+		ClassRoom room = Main.requirements.classes[classRoomId];
+		sb.append(room.name);
+		sb.append("\n\tРозмір: "+room.size);
+		sb.append("\n\tНеобхідний розмір: "+
+				((isLecture)?subject.amount_of_students_on_lectures:subject.amount_of_students_on_seminars));
 		return sb.toString();
 	}
 
