@@ -1,7 +1,6 @@
 package main;
 
 import java.util.*;
-import java.util.function.BiConsumer;
 
 public class CSPGraph {
 	ArrayList<Vertex<LessonVertex>> vertices = new ArrayList<>();
@@ -42,11 +41,12 @@ public class CSPGraph {
 
 	ArrayList<Lesson> findNextSolution(){
 		while (steps.size()!=vertices.size()){
+			System.out.println("Length of path: "+steps.size());
 			Vertex<LessonVertex> next_vertex = getNextVertex();
 			if(next_vertex==null){
 				next_vertex = getStartVertex();
 			}
-			if(next_vertex.possible_values.isEmpty()){
+			if(next_vertex.possible_values.isEmpty() || next_vertex==null){
 				goBack();
 				continue;
 			}
@@ -119,16 +119,18 @@ public class CSPGraph {
 
 	private void goBack() {
 		GraphState removed_state = steps.removeLast();
+		removed_state.current_vertex.possible_values.remove(removed_state.value);
 		unused_vertices.add(removed_state.current_vertex);
 		for(VertexRestriction linked : removed_state.current_vertex.neighbours){
 			linked.vertex.possible_values = removed_state.neighbour_states.get(removed_state.current_vertex);
 		}
+
 	}
 
 	private Vertex<LessonVertex> getNextVertex() {
 		if(current==null) return null;
 		if(current.neighbours.isEmpty()) return null;
-		int min =1000;
+		int min = Integer.MAX_VALUE;
 		Vertex<LessonVertex> best_vertex = null;
 		for(VertexRestriction linked : current.neighbours){
 			if(min > linked.vertex.possible_values.size() && unused_vertices.contains(linked.vertex)){
